@@ -1,0 +1,20 @@
+{% extends "home/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% load socialaccount %}
+
+<div class="text-center" style="margin-bottom: 2rem;">
+   <h4>Welcome, {{ user.username|title  }}!</h4>
+   <p>Please complete your profile by entering the information below</p>
+</div>
+
+<form action="" method="post" enctype="multipart/form-data"><input type='hidden' />
+   {%csrf_token %}
+   {{ form|crispy }}
+   <div class="form-group">
+      <button type="submit" class="btn btn-outline-success">Submit</button>
+   </div>
+</form>
+
+{% endblock content %}

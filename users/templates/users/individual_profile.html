@@ -1,0 +1,141 @@
+{% extends "home/base.html" %}
+{% load socialaccount %}
+{% load crispy_forms_filters %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="card">
+  <div class="card-header">
+    <div class="media">
+      <img id="profile-image" src="{{ profile.getProfileImageURL}}" class="rounded mr-3 my-auto" alt="Profile Image">
+      <div class="media-body my-auto">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <h5>{{ profile.full_name|title }}</h5>
+              {{ profile.email }}
+            </div>
+            <div class="col"></div>
+            <div class="col">
+              <button type="button" class="btn btn-outline-secondary pull" id="button">{{status_display}}</button>
+              {% if status == 1 %}
+              <button type="button2" class="btn btn-outline-secondary pull" id="button2">Reject Friend Request</button>
+              {% endif %}
+              {% if status == 0 %}
+              <a class="btn btn-outline-secondary pull" href="{% url 'specific_chat' chatroom %}">Chat</a>
+
+              {% endif%}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="card-text">Major: <br>{{profile.major}}</p>
+    <p class="card-text">Favorite Food: <br>{{profile.food}}</p>
+    <p class="card-text">Favorite Movie: <br>{{profile.movie}}</p>
+    <p class="card-text">Hobbies: <br></p>
+    {% for hobby in profile.hobbies.all %}
+
+    <p style="margin-left: 40px">{{hobby}}</p>
+    {% endfor %}
+    <p class="card-text">Biography:<br>{{profile.bio}}</p>
+    {% else %}
+    <p>Please login with the button at the top-right</p>
+  </div>
+</div>
+{% endif %}
+
+<script type="text/javascript">
+  var FriendRequestBtn = document.getElementById("button")
+  if ("{{status}}" == 1) {
+    FriendRequestBtn.addEventListener("click", function () { acceptFriendRequest("{{frid}}", reload) })
+    var FriendRequestBtn2 = document.getElementById("button2")
+    FriendRequestBtn2.addEventListener("click", function () { rejectFriendRequest("{{frid}}", reload()) })
+  }
+  else if ("{{status}}" == 0 || "{{status}}"==2) {
+    FriendRequestBtn.disabled = true;    
+  }
+  else if ("{{status}}" == 3) {
+    FriendRequestBtn.addEventListener("click", function () {
+      sendFriendRequest("{{profile.email}}", reload);
+      FriendRequestBtn.disabled = true;
+    })
+  }
+  function reload() {
+    window.location.reload(true);
+  }
+  function sendFriendRequest(email, uiUpdateFunction) {
+    payload = {
+      "csrfmiddlewaretoken": "{{csrf_token}}",
+      "receiver_user": email,
+    }
+    $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "{%url 'friend_request' %}",
+      timeout: 5000,
+      data: payload,
+      success: function (data) {
+        if (payload["response"] == "Sent") {
+          FriendRequestBtn.innnerHTML = "Sent"
+          console.log("success")
+
+        }
+      },
+      error: function (data) {
+        console.error("ERROR...", data)
+
+      },
+      complete: function (data) {
+        uiUpdateFunction()
+      }
+    })
+  }
+
+  function acceptFriendRequest(friend_request_id, uiUpdateFunction) {
+    var url = "{%url 'accept' friend_request_id=123 %}".replace("123", friend_request_id)
+    $.ajax({
+      type: "GET",
+      dataType: "json",
+      url: url,
+      timeout: 5000,
+      success: function (data) {
+        if (data.response == "Accepted") {
+          FriendRequestBtn.innnerHTML = "Friends"
+          console.log("success")
+        }
+      },
+      error: function (data) {
+        console.error("ERROR...", data)
+      },
+      complete: function (data) {
+        uiUpdateFunction()
+      }
+    })
+  }
+
+  function rejectFriendRequest(friend_request_id, uiUpdateFunction) {
+    var url = "{%url 'reject' friend_request_id=123 %}".replace("123", friend_request_id)
+    $.ajax({
+      type: "GET",
+      dataType: "json",
+      url: url,
+      timeout: 5000,
+      success: function (data) {
+        if (data.response == "Rejected") {
+          FriendRequestBtn.innnerHTML = "Send Friend Request"
+          console.log("success")
+        }
+      },
+      error: function (data) {
+        console.error("ERROR...", data)
+      },
+      complete: function (data) {
+        uiUpdateFunction()
+      }
+    })
+  }
+</script>
+{% endblock content %}

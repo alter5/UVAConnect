@@ -1,0 +1,10 @@
+.idea
+*.sqlite3
+.vEnv
+*pyc
+/venv/
+/workspace.code-workspace
+.vscode/settings.json
+.pylintrc
+/staticfiles/
+friends-workspace.code-workspace

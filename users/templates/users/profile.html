@@ -1,0 +1,26 @@
+{% extends "home/base.html" %}
+{% load crispy_forms_filters %}
+{% block content %}
+
+<h2>Edit Profile</h2>
+<div class="card">
+  <div class="card-header">
+    <div class="media">
+      <img id="profile-image" src="{{ user.profile.getProfileImageURL }}" class="rounded mr-3 my-auto" alt="Profile Image">
+      <div class="media-body my-auto">
+        <h5>{{ user.profile.full_name|title }}</h5>
+        {{ user.profile.email }}
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <form action="" method="post" enctype="multipart/form-data"><input type='hidden' />
+      {%csrf_token %}
+      {{ form|crispy  }}
+      <div class="form-group">
+        <button type="submit" class="btn btn-outline-success">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock content %}

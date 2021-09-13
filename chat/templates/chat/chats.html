@@ -1,0 +1,159 @@
+{% extends "home/base.html" %}
+{% load socialaccount %}
+{% block content %}
+
+{% if user.is_authenticated %}
+
+
+    <div class="d-md-flex h-md-100 align-items-center">
+
+        
+        <div class="col-md-3 p-0 h-md-100 " style="width: 25%; height : 540px;">
+            <div class="overflow-auto" style="height:545px; box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;" >
+                {% for friend, link in friends.items %}
+                    <a id="index-profile-card-hyperlink" href="{% url 'specific_chat' link %}">
+                        <div class="card bg-light mb-3 border-0" style="width:calc(100% - 15px);flex-direction: row; padding:5px;">
+                        <img class="card-img-left" style="height:5rem" src="{{ friend.profile.getProfileImageURL }}" alt="Profile Image" onerror=this.src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png">
+                        <div class="card-body">
+                            <h7 class="card-title" style = "text-overflow: ellipsis;">{{friend.profile.full_name}}</h7>
+                        </div>
+                        </div>
+                    </a>
+
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="col-md-9 p-0 bg-white h-md-100" style="width: 75%">
+            <ul id="messages" class="messages">
+                {% for message in chat_messages %}
+                    {% if message.user == user %}
+                        <li class="message right">
+                            <img src="{{ message.user.profile.getProfileImageURL }}" alt = "{{message.user.full_name}}" class="avatar">
+                                <div class="text_wrapper">
+                                    <div class="text">{{message.content}}<br>
+                                </div>
+                            </div>
+                        </li>
+                    {% else %}
+                    <li class="message left">
+                        <img src="{{ message.user.profile.getProfileImageURL }}" alt = "{{message.user.full_name}}" class="avatar">
+                        <div class="text_wrapper">
+                                <div class="text">{{message.content}}<br>
+                            </div>
+                        </div>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% if room_name != null %}
+            <div class="input-group">
+                <input id="chat-message-input" type="text" class="form-control">
+                <button class="btn btn-outline-secondary" id="chat-message-submit" type="button" >Send</button>
+            </div>
+            {% else %}
+            <div class="input-group">
+                <input id="chat-message-input" type="text" class="form-control" disabled>
+                <button class="btn btn-outline-secondary" id="chat-message-submit" type="button" disabled>Send</button>
+            </div>
+            {% endif %}
+            <script>      
+                var list = document.getElementById("messages");
+                list.scrollTop = list.scrollHeight;
+                
+                function showMessage(message,user,image) {
+                    let position = 'left';
+                    //const date = new Date(timestamp);
+                    if (user=== "{{user.email}}") position = 'right';
+                    const messageItem = `
+                            <li class="message ${position}">
+                                <img src=${image} class="avatar">
+                                    <div class="text_wrapper">
+                                        <div class="text">${message}<br>
+                                    </div>
+                                </div>
+                            </li>`;
+                    $(messageItem).appendTo('#messages');
+                    $("#messages").stop().animate({scrollTop: $('#messages').prop("scrollHeight")}, '500', 'swing', function() {});
+                    }
+
+                let wsURI = '';
+                if (window.location.protocol == 'https:') {
+                    wsURI += 'wss://' + window.location.host + '/ws/chat/' + "{{room_name}}" + '/'
+                } else {
+                    wsURI += 'ws://' + window.location.host + '/ws/chat/' + "{{room_name}}" + '/'
+                }
+                const chatSocket = new WebSocket(wsURI);
+                chatSocket.onmessage = function(e) {
+                    const data = JSON.parse(e.data);
+                    showMessage(data.message, data.user, data.image)
+                    //document.querySelector('#chat-log').value += ("<b>" + data['user'] + ":</b> <p>" + data['message'] + "</p><br>");
+                };
+        
+                chatSocket.onclose = function(e) {
+                    console.error('Chat socket closed unexpectedly');
+                };
+        
+                document.querySelector('#chat-message-input').focus();
+                document.querySelector('#chat-message-input').onkeyup = function(e) {
+                    if (e.keyCode === 13) {  // enter, return
+                        document.querySelector('#chat-message-submit').click();
+                    }
+                };
+        
+                document.querySelector('#chat-message-submit').onclick = function(e) {
+                    const messageInputDom = document.querySelector('#chat-message-input');
+                    const message = messageInputDom.value;
+                    if (message === "") {return};
+                    chatSocket.send(JSON.stringify({
+                        'message': message,
+                        'user' : "{{user.email}}",
+                        'image': "{{user.profile.getProfileImageURL}}"
+                    }));
+                    messageInputDom.value = '';
+                };
+            </script>
+
+            <!--
+            <div class="card" id="id_chatroom_card">
+				<div class="d-flex flex-row align-items-center card-header" id="id_room_title">
+				<a class="d-flex flex-row" target="_blank" id="id_user_info_container">
+					<img class="profile-image rounded-circle img-fluid" id="id_other_user_profile_image">
+					<h3 class="ml-2" id="id_other_username"></h3>
+				</a>
+				
+				</div>
+				<div class="card-body p-1">
+					<div class="d-flex flex-column" id="id_chat_log_container">
+					
+						<div class="d-flex flex-row justify-content-center" id="id_chatroom_loading_spinner_container">
+							<div class="spinner-border text-primary"  id="id_chatroom_loading_spinner" role="status"  style="display: none; ">
+								<span class="sr-only">Loading...</span>
+							</div>
+						</div>
+						<div class="d-flex chat-log" id="id_chat_log">
+							
+						</div>
+						
+						<div class="d-flex flex-row chat-message-input-container">
+							<textarea class="flex-grow-1 chat-message-input" id="id_chat_message_input"></textarea>
+							<button class="btn btn-primary chat-message-submit-button">
+								<span id="id_chat_message_submit" class="material-icons">send
+								</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+            -->
+        </div>
+            
+    </div>
+
+{% else %}
+  <h1>This is the chat page</h1>
+  <p>Please login with the button at the top-right</p>
+{% endif %}
+
+{% endblock content %}
