@@ -1,4 +1,4 @@
-# Friend Finding App by Team-B21
+# FriendFinder
 
 This repository contains code for Friend Finding App created by Team B-21 for CS 3240 - Advanced Software Development at UVA.
 Below is a step-by-step guide for a first time user to navigate through our site to try and test all our functionalities:
