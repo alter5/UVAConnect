@@ -1,6 +1,6 @@
-# FriendFinder
+# UVAConnect
 
-This repository contains code for Friend Finding App created by Team B-21 for CS 3240 - Advanced Software Development at UVA.
+This repository contains code for the UVAConnect project created by former UVA students.
 Below is a step-by-step guide for a first time user to navigate through our site to try and test all our functionalities:
 
 ## Directions 
