@@ -1,6 +1,6 @@
 # UVAConnect
 
-This repository contains code for the UVAConnect project created by former UVA students.
+This repository contains code for the UVAConnect project created by four UVA students.
 Below is a step-by-step guide for a first time user to navigate through our site to try and test all our functionalities:
 
 ## Directions 
