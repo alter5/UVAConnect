@@ -6,6 +6,7 @@ Tech Stack:
 - The frontend and backend uses Django with Bootstrap
 - The spaCy AI library is used to compare student profiles and generate a match score
 - WebSocket is used for the website's chat feature
+- This project is deployed onto Heroku using Travis CI for continuous integration
 
 ## Directions 
 Below is a step-by-step guide for a first time user to navigate through our site to try and test all our functionalities:
