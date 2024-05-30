@@ -18,7 +18,7 @@ Below is a step-by-step guide for a first time user to navigate through our site
 ## Website Address
 
 Access our website by clicking at the link below:
-<a href="https://friends-b21.herokuapp.com/"> https://friends-b21.herokuapp.com/ </a>
+<a href="https://uva-connect.herokuapp.com/"> https://uva-connect.herokuapp.com/ </a>
 
 ## First-Time-User
 
