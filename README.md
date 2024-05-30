@@ -4,7 +4,7 @@ This repository contains code for the UVAConnect project created by a team of UV
 
 Tech Stack:
 - The frontend and backend uses Django with Bootstrap
-- The spaCy AI library is used to compare profiles and generate a match score
+- The spaCy AI library is used to compare student profiles and generate a match score
 - WebSocket is used for the website's chat feature
 
 ## Directions 
