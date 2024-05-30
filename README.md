@@ -1,6 +1,8 @@
 # UVAConnect
 
-This repository contains code for the UVAConnect project created by a team of UVA students. UVAConnect matches students with new friends to meet and chat with based on their profile information. 
+This repository contains code for the UVAConnect project created by a team of UVA students. 
+
+UVAConnect matches students with new friends to meet and chat with based on their profile information. 
 
 Tech Stack:
 - The frontend and backend uses Django with Bootstrap
