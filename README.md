@@ -5,9 +5,9 @@ This repository contains code for the UVAConnect project created by a team of UV
 UVAConnect matches students with new friends to meet and chat with based on their profile information. 
 
 Tech Stack:
-- The frontend and backend uses Django with Bootstrap
+- This website uses the Django web framework with Bootstrap
 - The spaCy AI library is used to compare student profiles and generate a match score
-- WebSocket is used for the website's chat feature
+- WebSocket is used for the website's real-time chat feature
 - This project is deployed onto Heroku using Travis CI for continuous integration
 
 ## Directions 
