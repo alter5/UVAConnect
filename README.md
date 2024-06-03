@@ -8,6 +8,7 @@ Tech Stack:
 - This website uses the Django web framework with Bootstrap
 - The spaCy AI library is used to compare student profiles and generate a match score
 - WebSocket is used for the website's real-time chat feature
+- Profile images and website assets are stored using Amazon S3
 - This project is deployed onto Heroku using Travis CI for continuous integration
 
 ## Directions 
